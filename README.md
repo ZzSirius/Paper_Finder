@@ -71,14 +71,25 @@ npm run preview
 
 ### 配置 Dify API
 
-项目默认使用 Dify Workflow API 进行论文搜索。如需修改 API 配置，请编辑 `src/services/difyApi.js`：
+项目通过 `.env` 环境变量管理 Dify API 配置，确保敏感信息不会泄露到公开仓库。
 
-```js
-const API_BASE = "https://api.dify.ai/v1";  // Dify API 地址
-const API_KEY = "your-api-key-here";          // 你的 API Key
+```bash
+# 1. 复制环境变量模板
+cp .env.example .env
+
+# 2. 编辑 .env 文件，填入你的 Dify API Key
+VITE_DIFY_API_BASE=https://api.dify.ai/v1
+VITE_DIFY_API_KEY=app-xxxxxxxxxxxxxx
 ```
 
-> ⚠️ **安全提醒**：请勿将 API Key 直接硬编码在代码中或提交到公开仓库。建议使用环境变量（`.env` 文件）管理敏感信息。
+环境变量说明：
+
+| 变量名 | 说明 | 必填 |
+|--------|------|------|
+| `VITE_DIFY_API_BASE` | Dify API 基础地址 | 否（默认 `https://api.dify.ai/v1`） |
+| `VITE_DIFY_API_KEY` | Dify 应用的 API Key | **是** |
+
+> ⚠️ `.env` 文件已加入 `.gitignore`，不会被提交到 Git 仓库。请勿将包含真实 Key 的 `.env` 文件上传到公开仓库。
 
 ## 🔧 Dify Workflow 说明
 
