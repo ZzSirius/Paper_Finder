@@ -1,5 +1,5 @@
-const API_BASE = import.meta.env.VITE_DIFY_API_BASE || "https://api.dify.ai/v1";
-const API_KEY = import.meta.env.VITE_DIFY_API_KEY;
+const API_BASE = "https://api.dify.ai/v1";
+const API_KEY = "app-9QjgTpfD9p1hvnV86GRSqa66";
 
 /**
  * Search papers by keyword using Dify workflow
@@ -7,10 +7,6 @@ const API_KEY = import.meta.env.VITE_DIFY_API_KEY;
  * @returns {Promise<{papers: Array, taskId: string}>}
  */
 export async function searchPapers(keyword) {
-  if (!API_KEY) {
-    throw new Error("VITE_DIFY_API_KEY is not set. Please check your .env file.");
-  }
-
   const response = await fetch(`${API_BASE}/workflows/run`, {
     method: "POST",
     headers: {

@@ -22,7 +22,7 @@
 ## 📦 项目结构
 
 ```
-dify_keyword/
+Paper_Finder/
 ├── public/
 │   ├── favicon.svg          # 网站图标
 │   └── icons.svg            # 图标资源
@@ -53,7 +53,7 @@ dify_keyword/
 
 ```bash
 # 克隆仓库
-git clone https://github.com/Maple-Gong/Paper_Finder.git
+git clone https://github.com/ZzSirius/Paper_Finder.git
 cd Paper_Finder
 
 # 安装依赖
@@ -71,25 +71,14 @@ npm run preview
 
 ### 配置 Dify API
 
-项目通过 `.env` 环境变量管理 Dify API 配置，确保敏感信息不会泄露到公开仓库。
+编辑 `src/services/difyApi.js`，修改以下配置：
 
-```bash
-# 1. 复制环境变量模板
-cp .env.example .env
-
-# 2. 编辑 .env 文件，填入你的 Dify API Key
-VITE_DIFY_API_BASE=https://api.dify.ai/v1
-VITE_DIFY_API_KEY=app-xxxxxxxxxxxxxx
+```js
+const API_BASE = "https://api.dify.ai/v1";   // Dify API 地址
+const API_KEY = "your-api-key-here";           // 你的 API Key
 ```
 
-环境变量说明：
-
-| 变量名 | 说明 | 必填 |
-|--------|------|------|
-| `VITE_DIFY_API_BASE` | Dify API 基础地址 | 否（默认 `https://api.dify.ai/v1`） |
-| `VITE_DIFY_API_KEY` | Dify 应用的 API Key | **是** |
-
-> ⚠️ `.env` 文件已加入 `.gitignore`，不会被提交到 Git 仓库。请勿将包含真实 Key 的 `.env` 文件上传到公开仓库。
+> ⚠️ **安全提醒**：请勿将真实 API Key 提交到公开仓库。建议使用 `.env` 环境变量管理敏感信息。
 
 ## 🔧 Dify Workflow 说明
 
@@ -118,4 +107,4 @@ MIT License
 
 ---
 
-**Made with ❤️ by Maple-Gong**
+**Made with ❤️ by ZzSirius**
