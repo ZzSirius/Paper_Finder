@@ -1,4 +1,5 @@
-const API_BASE = "https://api.dify.ai/v1";
+// 开发环境通过 Vite 代理避免 CORS 问题，生产环境直接请求
+const API_BASE = import.meta.env.DEV ? "/api/dify" : "https://api.dify.ai/v1";
 const API_KEY = "app-9QjgTpfD9p1hvnV86GRSqa66";
 
 /**
