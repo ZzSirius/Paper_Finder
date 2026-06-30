@@ -3,7 +3,7 @@ const API_BASE = import.meta.env.DEV ? "/api/dify" : "https://api.dify.ai/v1";
 const API_KEY = "app-9QjgTpfD9p1hvnV86GRSqa66";
 
 /**
- * Search papers by keyword using Dify workflow
+ * Search papers by keyword using Dify workflow (streaming mode)
  * @param {string} keyword - The search keyword
  * @returns {Promise<{papers: Array, taskId: string}>}
  */
@@ -16,7 +16,7 @@ export async function searchPapers(keyword) {
     },
     body: JSON.stringify({
       inputs: { keyword },
-      response_mode: "blocking",
+      response_mode: "streaming",
       user: "paper-search-user",
     }),
   });
@@ -28,16 +28,43 @@ export async function searchPapers(keyword) {
     );
   }
 
-  const data = await response.json();
+  // Parse streaming SSE response
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let finalOutputs = null;
 
-  // Parse paper results from workflow output
-  const rawOutput = data.data?.outputs?.out || [];
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n");
+    buffer = lines.pop() || "";
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || !trimmed.startsWith("data: ")) continue;
+
+      try {
+        const event = JSON.parse(trimmed.slice(6));
+        if (event.event === "workflow_finished") {
+          finalOutputs = event.data?.outputs;
+        }
+      } catch {
+        // skip non-JSON SSE lines
+      }
+    }
+  }
+
+  if (!finalOutputs) {
+    throw new Error("Workflow did not return outputs");
+  }
+
+  const rawOutput = finalOutputs.out || [];
   const papers = parsePapers(rawOutput);
 
-  return {
-    papers,
-    taskId: data.task_id,
-  };
+  return { papers };
 }
 
 /**
