@@ -22,7 +22,7 @@
 ## 📦 项目结构
 
 ```
-Paper_Finder/
+dify_keyword/
 ├── public/
 │   ├── favicon.svg          # 网站图标
 │   └── icons.svg            # 图标资源
@@ -53,7 +53,7 @@ Paper_Finder/
 
 ```bash
 # 克隆仓库
-git clone https://github.com/ZzSirius/Paper_Finder.git
+git clone https://github.com/Maple-Gong/Paper_Finder.git
 cd Paper_Finder
 
 # 安装依赖
@@ -71,14 +71,14 @@ npm run preview
 
 ### 配置 Dify API
 
-编辑 `src/services/difyApi.js`，修改以下配置：
+项目默认使用 Dify Workflow API 进行论文搜索。如需修改 API 配置，请编辑 `src/services/difyApi.js`：
 
 ```js
-const API_BASE = "https://api.dify.ai/v1";   // Dify API 地址
-const API_KEY = "your-api-key-here";           // 你的 API Key
+const API_BASE = "https://api.dify.ai/v1";  // Dify API 地址
+const API_KEY = "your-api-key-here";          // 你的 API Key
 ```
 
-> ⚠️ **安全提醒**：请勿将真实 API Key 提交到公开仓库。建议使用 `.env` 环境变量管理敏感信息。
+> ⚠️ **安全提醒**：请勿将 API Key 直接硬编码在代码中或提交到公开仓库。建议使用环境变量（`.env` 文件）管理敏感信息。
 
 ## 🔧 Dify Workflow 说明
 
@@ -107,4 +107,4 @@ MIT License
 
 ---
 
-**Made with ❤️ by ZzSirius**
+**Made with ❤️ by Maple-Gong**

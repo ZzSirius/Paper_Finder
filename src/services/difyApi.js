@@ -1,5 +1,4 @@
-// 开发环境通过 Vite 代理避免 CORS 问题，生产环境直接请求
-const API_BASE = import.meta.env.DEV ? "/api/dify" : "https://api.dify.ai/v1";
+const API_BASE = "/api/dify";
 const API_KEY = "app-9QjgTpfD9p1hvnV86GRSqa66";
 
 /**
@@ -28,43 +27,38 @@ export async function searchPapers(keyword) {
     );
   }
 
-  // Parse streaming SSE response
+  // Parse SSE stream
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
   let finalOutputs = null;
+  let taskId = "";
 
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
-
     buffer += decoder.decode(value, { stream: true });
     const lines = buffer.split("\n");
     buffer = lines.pop() || "";
-
     for (const line of lines) {
       const trimmed = line.trim();
       if (!trimmed || !trimmed.startsWith("data: ")) continue;
-
       try {
         const event = JSON.parse(trimmed.slice(6));
+        if (event.task_id) taskId = event.task_id;
         if (event.event === "workflow_finished") {
           finalOutputs = event.data?.outputs;
         }
       } catch {
-        // skip non-JSON SSE lines
+        // skip malformed lines
       }
     }
   }
 
-  if (!finalOutputs) {
-    throw new Error("Workflow did not return outputs");
-  }
-
-  const rawOutput = finalOutputs.out || [];
+  const rawOutput = finalOutputs?.out || [];
   const papers = parsePapers(rawOutput);
 
-  return { papers };
+  return { papers, taskId };
 }
 
 /**
